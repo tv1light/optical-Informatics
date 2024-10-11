@@ -18,7 +18,7 @@ def draw(title, arr_x, arr_y):
     plt.show()
 
 if __name__ == '__main__':
-    a, b = 0, 5
+    a, b = 0, 20
     p, q = 0, 5
     m, n = 1000, 1000
     alpha = 1
@@ -36,7 +36,7 @@ if __name__ == '__main__':
     hxi = (q - p) / 1000
     x = lambda k: a + k * hx
     xi = lambda l: p + l * hxi
-    F = lambda l: (hx * sum([jv(2, x(k)*xi(l)*alpha) * func(x(k))
+    F = lambda l: (hx * sum([jv(2, x(k)*xi(l)*alpha) * x(k) * func(x(k))
                              for k in range(0, n)]))
     Fl = [F(l) for l in range(0, n+1)]
     draw("График амплитуды выходного сигнала", np.arange(p, q, (q - p) / 1001), np.abs(Fl))
