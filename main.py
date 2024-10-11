@@ -1,17 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-
-
-def function(x):
-    """
-    Расчет значения функции входного сигнала
-    f(x) = exp(ix/10)
-
-    :param x:
-    :return: f(x) = exp(ix/10)
-    """
-    return np.exp(complex(0, 1) * x / 10)
-
+from scipy.special import jv
 
 def draw(title, arr_x, arr_y):
     """
@@ -22,22 +11,11 @@ def draw(title, arr_x, arr_y):
     :param arr_y:
     :return:
     """
-    plt.plot(arr_x, arr_y, 'ro')
+
+    plt.plot(arr_x, arr_y, 'm')
     plt.title(title)
     plt.grid(True)
     plt.show()
-
-
-def kernel(alpha, ksi, x):
-    """
-    Расчет ядра
-
-    :param alpha:
-    :param ksi:
-    :param x:
-    """
-    pass
-
 
 if __name__ == '__main__':
     a, b = 0, 5
@@ -45,9 +23,21 @@ if __name__ == '__main__':
     m, n = 1000, 1000
     alpha = 1
 
-    #Task 1
-    figure = plt.figure()
-    arr_x = np.linspace(a, b, n)
-    arr_y = function(arr_x)
-    draw("График амплитуды входного сигнала", arr_x, np.abs(arr_y))
-    draw("График фазы входного сигнала", arr_x, np.angle(arr_y))
+    #Исходный сигнал
+    betta = 1 / 10
+    func = lambda x: np.exp(complex(0, 1) * x * betta)
+    # arr_x = np.arange(a, b)
+    # arr_y = func(arr_x)
+    # draw("График амплитуды входного сигнала", arr_x, np.abs(arr_y))
+    # draw("График фазы входного сигнала", arr_x, np.angle(arr_y))
+
+    #Выходной сигнал
+    hx = (b - a) / m
+    hxi = (q - p) / 1000
+    x = lambda k: a + k * hx
+    xi = lambda l: p + l * hxi
+    F = lambda l: (hx * sum([jv(2, x(k)*xi(l)*alpha) * func(x(k))
+                             for k in range(0, n)]))
+    Fl = [F(l) for l in range(0, n+1)]
+    draw("График амплитуды выходного сигнала", np.arange(p, q, (q - p) / 1001), np.abs(Fl))
+    draw("График фазы выходного сигнала", np.arange(p, q, (q - p) / 1001), np.angle(Fl))
